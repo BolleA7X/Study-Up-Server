@@ -30,5 +30,5 @@
 	
 	$stmt->close();
 	$conn->close();
-	print_r(json_encode($response));
+	print_r(json_encode($response,JSON_PRETTY_PRINT));
 ?>
