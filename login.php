@@ -7,7 +7,7 @@
 	$usr = trim($data[0]);
 	$pwd = trim($data[1]);
 	
-	$stmt = $conn->prepare("SELECT password FROM User WHERE username=?");
+	$stmt = $conn->prepare("SELECT password FROM User WHERE name=?");
 	$stmt->bind_param("s",$usr);
 	if($stmt->execute()) {
 		$stmt->store_result();
