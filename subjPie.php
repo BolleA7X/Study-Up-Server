@@ -23,6 +23,7 @@
 					$i = $i + 1;
 				}
 				$response['courses'] = $list;	
+				$stmt->close();
 			}
 			else
 				$response = array('message' => "error");
@@ -34,7 +35,6 @@
 	else
 		$response = array('message' => "error");
 	
-	$stmt->close();
 	$conn->close();
 	print_r(json_encode($response,JSON_PRETTY_PRINT));
 ?>

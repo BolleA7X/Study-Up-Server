@@ -25,11 +25,11 @@
 		}
 		else
 			$response = array('message' => "wrong");
+		$stmt->close();
 	}
 	else
 		$response = array('message' => "error");
 	
-	$stmt->close();
 	$conn->close();
 	print_r(json_encode($response,JSON_PRETTY_PRINT));
 	
