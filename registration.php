@@ -21,6 +21,7 @@
 			$stmt->bind_param("ss",$usr,$pwd);
 			if($stmt->execute()) {
 				$response = array('message' => "ok");
+				$stmt->close();
 			}
 			else
 				$response = array('message' => "error");
@@ -31,7 +32,6 @@
 	else
 		$response = array('message' => "error");
 	
-	$stmt->close();
 	$conn->close();
 	print_r(json_encode($response,JSON_PRETTY_PRINT));
 	
