@@ -24,20 +24,22 @@
 		$rows = $stmt->num_rows;
 		$stmt->bind_result($hashedPwd);
 		$stmt->fetch();
-		//se trovo lo username
+		//controllo se ho trovato lo username
 		if($rows == 1) {
 			//controllo se la password è corretta
 			if(password_verify($pwd,$hashedPwd))
 				$response = array('message' => "ok");
+			//altrimenti la password è sbagliata
 			else
 				$response = array('message' => "wrong");
 		}
+		//altrimenti lo username è sbagliato
 		else
 			$response = array('message' => "wrong");
 		$stmt->close();
 	}
+	//altrimenti c'è stato un errore
 	else
-		//altrimenti c'è stato un errore
 		$response = array('message' => "error");
 	
 	//chiudo la connessione col database

@@ -34,16 +34,16 @@
 				$response = array('message' => "ok");
 				$stmt->close();
 			}
+			//altrimenti c'è stato un errore
 			else
-				//altrimenti c'è stato un errore
 				$response = array('message' => "error");
 		}
+		//altrimenti lo username è già in uso
 		else
-			//altrimenti lo username è già in uso
 			$response = array('message' => "taken");
 	}
+	//altrimenti c'è stato un errore
 	else
-		//altrimenti c'è stato un errore
 		$response = array('message' => "error");
 	
 	//chiudo la connessione al database
