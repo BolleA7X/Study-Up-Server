@@ -8,30 +8,42 @@
 	
 	$response;
 	$usr = trim($data['user']);
+	$lastId = 0; $fail = false;
 	
-	$stmt = $conn->prepare("INSERT INTO Session (localId,duration,date,th,ex,pr,user,course) VALUES (?,?,?,?,?,?,?,?)");
+	$stmt = $conn->prepare("INSERT INTO Session (localId,duration,date,theory,exercise,project,user,course) VALUES (?,?,?,?,?,?,?,?)");
 	
-	$i = 0; $lastId; $fail = false;
-	foreach($data['data'] as $session) {
-		$lastId = trim($session['id']);
-		$duration = trim($session['duration']);
-		$month = trim($session['month'])+1;
-		$date = trim($session['year'])."-".$month."-".trim($session['day']);
-		$th = trim($session['th']);
-		$ex = trim($session['ex']);
-		$pr = trim($session['pr']);
-		$course = trim($session['course']);
-		
-		$stmt->bind_param("iisiiiss",$lastId,$duration,$date,$th,$ex,$pr,$usr,$course);
-		if(!$stmt->execute()) {
-			$response = array("message" => "error","index" => $lastId);
-			$fail = true;
-			break;
+	if($usr != "") {
+		$i = 0;
+		foreach($data['data'] as $session) {
+			$lastId = trim($session['id']);
+			$duration = trim($session['duration']);
+			$month = trim($session['month'])+1;
+			$date = trim($session['year'])."-".$month."-".trim($session['day']);
+			$th = trim($session['th']);
+			$ex = trim($session['ex']);
+			$pr = trim($session['pr']);
+			$course = trim($session['course']);
+			
+			$stmt->bind_param("iisiiiss",$lastId,$duration,$date,$th,$ex,$pr,$usr,$course);
+			if(!$stmt->execute()) {
+				$response = array("message" => "error","index" => $lastId);
+				$fail = true;
+				break;
+			}
+			$i++;
 		}
 	}
+	else {
+		$fail = true;
+		$response = array("message" => "error","index" => $lastId);
+	}
 	
-	if(!$fail)
-		$response = array("message" => "ok","index" => $lastId);
+	if(!$fail) {
+		if($i > 0)
+			$response = array("message" => "ok","index" => $lastId);
+		else
+			$response = array("message" => "alreadySynced","index" => $lastId);
+	}
 	
 	$stmt->close();
 	$conn->close();
