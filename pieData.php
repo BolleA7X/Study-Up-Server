@@ -57,9 +57,9 @@
 				//calcolo il coefficiente di normalizzazione
 				$k = 1/($th+$ex+$pr);
 				//calcolo le percentuali normalizzate
-				$th_n = $k * $th;
-				$ex_n = $k * $ex;
-				$pr_n = $k * $pr;
+				$th_n = $k * $th * 100;
+				$ex_n = $k * $ex * 100;
+				$pr_n = $k * $pr * 100;
 				$percents = array('th' => $th_n,'ex' => $ex_n,'pr' => $pr_n);
 				$response['percents'] = $percents;
 				$stmt->close();
