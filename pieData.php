@@ -46,7 +46,27 @@
 			//altrimenti c'è stato un errore
 			else
 				$response = array('message' => "error");
-				
+			//dopo aver ottenuto le informazioni sui corsi calcolo le percentuali per i tipi di sessione
+			$stmt = $conn->prepare("SELECT SUM(theory),SUM(exercise),SUM(project) FROM Session WHERE user=?");
+			$stmt->bind_param("s",$usr);
+			//se la query ha successo
+			if($stmt->execute()) {
+				$stmt->bind_result($th,$ex,$pr);
+				$stmt->fetch();
+				//dato che ci possono essere sessioni con tipi di sessione multipli (es: sia teoria che esercizi) la somma delle percentuali può essere superiore a 100, quindi
+				//calcolo il coefficiente di normalizzazione
+				$k = 1/($th+$ex+$pr);
+				//calcolo le percentuali normalizzate
+				$th_n = $k * $th;
+				$ex_n = $k * $ex;
+				$pr_n = $k * $pr;
+				$percents = array('th' => $th_n,'ex' => $ex_n,'pr' => $pr_n);
+				$response['percents'] = $percents;
+				$stmt->close();
+			}
+			//altrimenti c'è stato un errore
+			else
+				$response = array('message' => "error");
 		}
 		//altrimenti lo username è sbagliato
 		else
@@ -61,6 +81,6 @@
 	//invio i risultati codificati in formato json all'app
 	print_r(json_encode($response,JSON_PRETTY_PRINT));
 	
-	//formato json in output (se corretto): {"message":"ok","total_time":"1280","courses":[{"course":"Fisica","time":"470"}, ... ]}
+	//formato json in output (se corretto): {"message":"ok","total_time":"1280","courses":[{"course":"Fisica","time":"470"}, ... ],"percents":["th":"50","ex":"45","pr":"5"]}
 	//formato json in output (se sbagliato/errore): {"message":"wrong"} / {"message":"error"}
 ?>
